@@ -1,0 +1,19 @@
+{
+  "name": "weichat-codex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local WeChat iLink Bot bridge for Codex CLI with quick and agent modes.",
+  "scripts": {
+    "test": "node --experimental-strip-types test/all.test.ts",
+    "start": "node --experimental-strip-types src/index.ts",
+    "start:proxy": "node --use-env-proxy --experimental-strip-types src/index.ts",
+    "start:background-install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-scheduled-task.ps1",
+    "start:background-remove": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-scheduled-task.ps1",
+    "status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/status.ps1",
+    "check": "node --experimental-strip-types --check src/index.ts"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
