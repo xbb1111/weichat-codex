@@ -52,5 +52,43 @@ if (-not $env:WECHAT_CODEX_WEB_PORT) {
 $LogPath = Join-Path $LogDir 'weichat-codex.log'
 $NodeExe = 'C:\Program Files\nodejs\node.exe'
 
-"[$(Get-Date -Format o)] starting weichat-codex from $ProjectRoot" | Out-File -FilePath $LogPath -Encoding UTF8 -Append
-& $NodeExe --experimental-strip-types src/index.ts *>> $LogPath
+function Write-BridgeLog {
+  param([string]$Message)
+  "[$(Get-Date -Format o)] $Message" | Out-File -FilePath $LogPath -Encoding UTF8 -Append
+}
+
+try {
+  Write-BridgeLog "starting weichat-codex from $ProjectRoot"
+  Write-BridgeLog "node path: $NodeExe"
+  Write-BridgeLog "working directory: $(Get-Location)"
+  if (-not (Test-Path $NodeExe)) {
+    throw "Node executable not found: $NodeExe"
+  }
+
+  $StdoutPath = Join-Path $LogDir "node-stdout-$PID.log"
+  $StderrPath = Join-Path $LogDir "node-stderr-$PID.log"
+  $Process = Start-Process -FilePath $NodeExe `
+    -ArgumentList @('--experimental-strip-types', 'src/index.ts') `
+    -WorkingDirectory $ProjectRoot `
+    -NoNewWindow `
+    -Wait `
+    -PassThru `
+    -RedirectStandardOutput $StdoutPath `
+    -RedirectStandardError $StderrPath
+  if (Test-Path $StdoutPath) {
+    Get-Content $StdoutPath | Out-File -FilePath $LogPath -Encoding UTF8 -Append
+    Remove-Item $StdoutPath -Force
+  }
+  if (Test-Path $StderrPath) {
+    Get-Content $StderrPath | Out-File -FilePath $LogPath -Encoding UTF8 -Append
+    Remove-Item $StderrPath -Force
+  }
+  $LASTEXITCODE = $Process.ExitCode
+  $ExitCode = $LASTEXITCODE
+  Write-BridgeLog "node exited with code $ExitCode"
+  exit $ExitCode
+} catch {
+  Write-BridgeLog "startup wrapper failed: $($_.Exception.Message)"
+  Write-BridgeLog "startup wrapper detail: $($_ | Out-String)"
+  exit 1
+}

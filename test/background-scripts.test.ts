@@ -25,3 +25,15 @@ test('scheduled task scripts target the weichat-codex task name', () => {
   assert.match(uninstall, /Unregister-ScheduledTask/);
   assert.match(status, /Get-ScheduledTask/);
 });
+
+test('hidden startup script logs node failures before exiting', () => {
+  const startHidden = readFileSync('scripts/start-hidden.ps1', 'utf8');
+
+  assert.match(startHidden, /Test-Path \$NodeExe/);
+  assert.match(startHidden, /RedirectStandardError/);
+  assert.match(startHidden, /RedirectStandardOutput/);
+  assert.match(startHidden, /\$LASTEXITCODE/);
+  assert.match(startHidden, /node exited with code/);
+  assert.match(startHidden, /startup wrapper failed/);
+  assert.doesNotMatch(startHidden, /2>&1/);
+});
