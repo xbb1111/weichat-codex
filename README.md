@@ -81,6 +81,14 @@ cmd /c npm run status
 
 如果输出 `Scheduled task not found: weichat-codex`，说明还没有安装后台计划任务。先用 `cmd /c npm start` 前台调试；确认可用后再运行 `cmd /c npm run start:background-install`。
 
+如果 `State` 是 `Ready` 且 `LastTaskResult` 是 `1`，说明后台任务启动后失败退出。先查看最近日志：
+
+```powershell
+Get-Content .\logs\weichat-codex.log -Tail 80
+```
+
+首次登录建议先用 `cmd /c npm start` 在前台完成 QR 扫码；后台隐藏任务看不到二维码。确认前台可连接后再启动后台任务。Node.js 的实验性 warning 会写入日志，但不会单独导致后台任务失败。
+
 卸载后台任务：
 
 ```powershell
