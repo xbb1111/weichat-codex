@@ -29,10 +29,41 @@ Windows 本机微信到 Codex CLI 的桥接服务。
 - 可在命令行调用的 Codex CLI
 - 微信/iLink Bot 相关配置，或可扫码完成 QR 登录流程
 
-安装依赖：
+## 快速开始
+
+下载项目并安装依赖：
 
 ```powershell
+git clone https://github.com/xbb1111/weichat-codex.git
+cd weichat-codex
 cmd /c npm install
+```
+
+首次启动建议使用前台模式，终端会显示 QR 登录信息：
+
+```powershell
+cmd /c npm start
+```
+
+扫码登录成功后，在微信里发送：
+
+```text
+绑定
+```
+
+确认前台模式能正常收发消息后，关闭前台服务，再安装后台计划任务：
+
+```powershell
+cmd /c npm run start:background
+cmd /c npm run status
+```
+
+后台模式会隐藏运行，适合长期挂着；以后登录 Windows 后会自动启动。首次登录不要直接用后台模式，因为隐藏任务看不到 QR 码。
+
+如果只是在本机调试，可以一直使用：
+
+```powershell
+cmd /c npm start
 ```
 
 ## 本地对话窗口
