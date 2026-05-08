@@ -8,6 +8,7 @@
     "test": "node --experimental-strip-types test/all.test.ts",
     "start": "node --experimental-strip-types src/index.ts",
     "start:proxy": "node --use-env-proxy --experimental-strip-types src/index.ts",
+    "start:background": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-scheduled-task.ps1",
     "start:background-install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-scheduled-task.ps1",
     "start:background-remove": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-scheduled-task.ps1",
     "status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/status.ps1",

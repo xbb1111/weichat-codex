@@ -10,9 +10,10 @@ $Action = New-ScheduledTaskAction `
   -WorkingDirectory $ProjectRoot
 $Trigger = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
 $Principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Limited
-$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
+$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Seconds 0)
 $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
 $Task.Settings.Hidden = $true
 
 Register-ScheduledTask -TaskName $TaskName -InputObject $Task -Force | Out-Null
-Write-Host "Installed scheduled task: $TaskName"
+Start-ScheduledTask -TaskName $TaskName
+Write-Host "Installed and started scheduled task: $TaskName"

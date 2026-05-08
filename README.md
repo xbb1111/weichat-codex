@@ -51,6 +51,8 @@ http://127.0.0.1:17878
 cmd /c npm start
 ```
 
+前台调试依赖当前终端窗口；终端关闭后，微信桥接服务也会停止。长期使用请安装后台计划任务。
+
 如果需要读取 `HTTP_PROXY` / `HTTPS_PROXY`：
 
 ```powershell
@@ -59,7 +61,13 @@ cmd /c npm run start:proxy
 
 ## 后台运行
 
-安装登录自启计划任务：
+安装登录自启计划任务，并立即在后台启动服务：
+
+```powershell
+cmd /c npm run start:background
+```
+
+兼容命令：
 
 ```powershell
 cmd /c npm run start:background-install

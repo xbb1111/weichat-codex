@@ -6,6 +6,7 @@ test('package exposes background scheduled task scripts', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 
   assert.equal(pkg.name, 'weichat-codex');
+  assert.equal(pkg.scripts['start:background'], 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-scheduled-task.ps1');
   assert.equal(pkg.scripts['start:background-install'], 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-scheduled-task.ps1');
   assert.equal(pkg.scripts['start:background-remove'], 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-scheduled-task.ps1');
   assert.equal(pkg.scripts.status, 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/status.ps1');
@@ -18,6 +19,9 @@ test('scheduled task scripts target the weichat-codex task name', () => {
 
   assert.match(install, /weichat-codex/);
   assert.match(install, /Register-ScheduledTask/);
+  assert.match(install, /Start-ScheduledTask/);
+  assert.match(install, /ExecutionTimeLimit/);
+  assert.match(install, /New-TimeSpan -Seconds 0/);
   assert.match(uninstall, /Unregister-ScheduledTask/);
   assert.match(status, /Get-ScheduledTask/);
 });
