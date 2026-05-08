@@ -26,7 +26,9 @@ Windows 本机微信到 Codex CLI 的桥接服务。
 
 - Windows
 - Node.js `>=24.0.0`
-- 可在命令行调用的 Codex CLI
+- Git，用于 `git clone` 下载项目
+- 可在 PowerShell/cmd 中调用的 Codex CLI
+- 可用的 OpenAI/ChatGPT/Codex 账号，或已配置的 OpenAI API Key，让 Codex CLI 可以正常调用模型
 - 微信/iLink Bot 相关配置，或可扫码完成 QR 登录流程
 
 ## 快速开始
@@ -38,6 +40,16 @@ git clone https://github.com/xbb1111/weichat-codex.git
 cd weichat-codex
 cmd /c npm install
 ```
+
+安装并登录 Codex CLI：
+
+```powershell
+npm install -g @openai/codex
+codex --version
+codex --login
+```
+
+如果使用 API Key 方式认证，也可以按你的 Codex CLI 配置方式设置 OpenAI API Key。关键要求是：在当前 PowerShell/cmd 里运行 `codex --version` 能正常输出版本，并且 `codex` 已经能访问模型。
 
 首次启动建议使用前台模式，终端会显示 QR 登录信息：
 
@@ -65,6 +77,20 @@ cmd /c npm run status
 ```powershell
 cmd /c npm start
 ```
+
+## 从 0 部署检查清单
+
+部署前逐项确认：
+
+- `node --version` 输出 `24.0.0` 或更高版本。
+- `git --version` 能正常输出版本。
+- `codex --version` 能正常输出版本。
+- `codex --login` 已完成，或 OpenAI API Key 已按 Codex CLI 要求配置好。
+- `cmd /c npm install` 已在项目目录执行成功。
+- `cmd /c npm start` 能显示微信 QR 登录信息，或环境变量里已经配置 `WEIXIN_BASEURL` / `WEIXIN_BOT_TOKEN` / `WEIXIN_ILINK_BOT_ID`。
+- 微信扫码登录后，已在微信里发送 `绑定`。
+- 前台模式确认能收发消息后，再执行 `cmd /c npm run start:background`。
+- `cmd /c npm run status` 能看到 `weichat-codex` 计划任务状态。
 
 ## 本地对话窗口
 
